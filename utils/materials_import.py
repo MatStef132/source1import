@@ -1503,8 +1503,11 @@ def ImportVMTtoVMAT(vmt_path: Path, preset_vmat = False):
     global vmt, vmat
     validMaterial = False
 
-    vmt = VMT(KV.FromFile(vmt_path))  # Its actually a collection - needs CollectionFromFile
-    vmt.path = vmt_path
+    try: 
+        vmt = VMT(KV.FromFile(vmt_path))  # Its actually a collection - needs CollectionFromFile
+        vmt.path = vmt_path
+    except Exception as e:
+        print("~ Failed to read VMT:", vmt_path, e)
 
     if any(wd in vmt.shader for wd in shaderDict):
         validMaterial = True
