@@ -227,6 +227,8 @@ class VMAT(ValveMaterial):
 
     @shader.setter
     def shader(self, n: str):
+        if SBOX:
+            SOURCE2_SHADER_EXT = ".shader"
         if not n.endswith(SOURCE2_SHADER_EXT): n += SOURCE2_SHADER_EXT
         self._shader = n
         self._kv['shader'] = n
@@ -238,6 +240,8 @@ class core(str, Enum):
             return "vr_" + self.name
         if CS2:
             return "csgo_" + self.name
+        if SBOX:
+            return "shaders/" + self.name.replace(SOURCE2_SHADER_EXT, ".shader")
         return self.name
     complex = auto()
     simple = auto()
@@ -1551,6 +1555,8 @@ def ImportVMTtoVMAT(vmt_path: Path, preset_vmat = False):
     if not preset_vmat:
         vmat = VMAT()
         vmat.shader = chooseShader()
+        if SBOX:
+            vmat.shader = vmat.shader.replace("vfx", "shader")
         vmat.path = OutName(vmt.path)
 
     if not OVERWRITE_MODIFIED and vmat.path.is_file():
